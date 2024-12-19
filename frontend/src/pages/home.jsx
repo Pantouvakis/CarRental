@@ -41,7 +41,12 @@ export function Home() {
                                 Your journey starts with us.
                             </Typography>
                             <div className="flex flex-wrap gap-4 items-center">
-                                <Input variant="outlined" size="lg" label="Pick-up Location" />
+                                <Input
+                                    variant="outlined"
+                                    size="lg"
+                                    label="Pick-up Location"
+                                    className="border-white text-white"
+                                />
 
                                 {/* Pick-up Date and Time */}
                                 <div className="flex flex-row items-center gap-2">
