@@ -28,7 +28,7 @@ export function Home() {
     return (
         <>
             <div className="relative flex h-screen content-center items-center justify-center pb-32">
-                <div className="absolute top-0 h-full w-full bg-[url('/img/young-couple-car-trip.png')] bg-cover bg-center" />
+                <div className="absolute top-0 h-full w-full bg-[url('/img/road-woman-beautiful-safari-young.png')] bg-cover bg-center" />
                 <div className="absolute top-0 h-full w-full bg-black/60 bg-cover bg-center" />
                 <div className="max-w-8xl container relative mx-auto">
                     <div className="flex flex-wrap items-center">

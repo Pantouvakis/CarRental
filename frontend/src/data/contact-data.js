@@ -1,28 +1,28 @@
 import {
-  BriefcaseIcon,
-  ChartBarIcon,
-  PlayIcon,
+    BriefcaseIcon,
+    ChartBarIcon,
+    ClockIcon,
 } from "@heroicons/react/24/solid";
 
 export const contactData = [
-  {
-    title: "Excelent Services",
-    icon: BriefcaseIcon,
-    description:
-      "Some quick example text to build on the card title and make up the bulk of the card's content.",
-  },
-  {
-    title: "Grow Your Market",
-    icon: ChartBarIcon,
-    description:
-      "Some quick example text to build on the card title and make up the bulk of the card's content.",
-  },
-  {
-    title: "Launch Time",
-    icon: PlayIcon,
-    description:
-      "Some quick example text to build on the card title and make up the bulk of the card's content.",
-  },
+    {
+        title: "Wide Selection of Cars",
+        icon: BriefcaseIcon,
+        description:
+            "We provide a diverse range of vehicles to match your travel needs, from compact cars to luxury SUVs.",
+    },
+    {
+        title: "Competitive Pricing",
+        icon: ChartBarIcon,
+        description:
+            "Enjoy great value with our affordable pricing and transparent rental policies.",
+    },
+    {
+        title: "Flexible Rentals",
+        icon: ClockIcon,
+        description:
+            "Book cars for short trips or long journeys with options that suit your schedule.",
+    },
 ];
 
 export default contactData;

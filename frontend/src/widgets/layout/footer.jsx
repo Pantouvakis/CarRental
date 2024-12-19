@@ -15,7 +15,7 @@ export function Footer({ title, description, socials, menus, copyright }) {
             <Typography className="font-normal text-blue-gray-500 lg:w-2/5">
               {description}
             </Typography>
-            <div className="mx-auto mt-6 mb-8 flex justify-center gap-2 md:mb-0 lg:justify-start">
+            <div className="mx-auto flex justify-center gap-2 md:mb-0 lg:justify-start">
               {socials.map(({ color, name, path }) => (
                 <a
                   key={name}
@@ -32,7 +32,7 @@ export function Footer({ title, description, socials, menus, copyright }) {
               ))}
             </div>
           </div>
-          <div className="mx-auto mt-12 grid w-max grid-cols-2 gap-24 lg:mt-0">
+          <div className="mx-auto grid w-max grid-cols-2 gap-24 lg:mt-0">
             {menus.map(({ name, items }) => (
               <div key={name}>
                 <Typography
@@ -42,7 +42,7 @@ export function Footer({ title, description, socials, menus, copyright }) {
                 >
                   {name}
                 </Typography>
-                <ul className="mt-3">
+                <ul className="mt-2">
                   {items.map((item) => (
                     <li key={item.name}>
                       <Typography
@@ -79,29 +79,29 @@ export function Footer({ title, description, socials, menus, copyright }) {
 }
 
 Footer.defaultProps = {
-  title: "Material Tailwind",
+  title: "Karpadu",
   description:
-    "Easy to use React components for Tailwind CSS and Material Design.",
+    "From Local Fleets to Global Streets.",
   socials: [
     {
       color: "gray",
-      name: "twitter",
-      path: "https://www.twitter.com/creativetim",
+      name: "linkedin",
+      path: "https://www.linkedin.com/company/karpadu",
     },
     {
       color: "gray",
-      name: "youtube",
-      path: "https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w",
+      name: "facebook",
+      path: "https://www.facebook.com/profile.php?id=61567817415208",
     },
     {
       color: "gray",
       name: "instagram",
-      path: "https://www.instagram.com/creativetimofficial/",
+        path: "https://www.instagram.com/karpadu_com",
     },
     {
       color: "black",
       name: "github",
-      path: "https://github.com/creativetimofficial/material-tailwind",
+      path: "https://github.com/enterprises/karpadu",
     },
   ],
   menus: [
@@ -144,13 +144,13 @@ Footer.defaultProps = {
   ],
   copyright: (
     <>
-      Copyright © {year} Material Tailwind by{" "}
+      Copyright © {year} Designed by{" "}
       <a
-        href="https://www.creative-tim.com?ref=mtk"
+        href="https://www.karpadu.com"
         target="_blank"
         className="text-blue-gray-500 transition-colors hover:text-blue-500"
       >
-        Creative Tim
+        Karpadu
       </a>
       .
     </>
