@@ -109,7 +109,7 @@ export function Home() {
                                 color="white"
                                 className="mb-6 font-black"
                             >
-                                Your journey starts with us.
+                                Your journey starts with Karpadu
                             </Typography>
 
 
@@ -201,6 +201,9 @@ export function Home() {
                                             placeholderText="Select Drop-off Date & Time"
                                         />
                                     </div>
+
+
+
                                 </div>
 
 
@@ -221,17 +224,21 @@ export function Home() {
                                                 id="driver-age"
                                                 className="w-5 h-5"
                                                 label="Driver age between 26-75"
-                                            />
+                                        />
+                                            <Button
+                                                onClick={() => alert("Searching...")}
+                                                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                            >
+                                                Search
+                                            </Button>
                                         </div>
+                                         
                                     </div>
-                                    <Button
-                                        onClick={() => alert("Searching...")}
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                    >
-                                        Search
-                                    </Button>
+                                   
 
-                                </div>
+
+
+                            </div>
 
 
 
