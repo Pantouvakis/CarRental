@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Card, Typography, Input, Checkbox } from "@material-tailwind/react";
+import { Card, Typography, Input, Checkbox, Button } from "@material-tailwind/react";
 import { Footer } from "@/widgets/layout";
 import { contactData } from "@/data";
 import axios from "axios";
@@ -98,7 +98,7 @@ export function Home() {
     return (
         <>
             <div className="relative flex h-screen content-center items-center justify-center pb-32">
-                <div className="absolute top-0 h-full w-full bg-[url('/img/road-woman-beautiful-safari-young.png')] bg-cover bg-center" />
+                <div className="absolute top-0 h-full w-full bg-[url('/img/young-couple-car-trip.png')] bg-cover bg-center" />
                 <div className="absolute top-0 h-full w-full bg-black/60 bg-cover bg-center" />
                 <div className="max-w-8xl container relative mx-auto">
                     <div className="flex flex-wrap items-center">
@@ -214,6 +214,13 @@ export function Home() {
                                             />
                                         </div>
                                     </div>
+                                    <Button
+                                        onClick={() => alert("Searching...")} // Replace this with actual functionality
+                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    >
+                                        Search
+                                    </Button>
+
                                 </div>
                             </div>
 
