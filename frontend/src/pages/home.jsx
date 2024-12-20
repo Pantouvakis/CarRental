@@ -1,28 +1,98 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Card, Typography, Input,} from "@material-tailwind/react";
+import { Card, Typography, Input, Checkbox } from "@material-tailwind/react";
 import { Footer } from "@/widgets/layout";
 import { contactData } from "@/data";
+import axios from "axios";
+import { generateTimeOptions } from "@/helpers/helper";
 
 export function Home() {
     const [pickUpDate, setPickUpDate] = useState(new Date());
     const [dropOffDate, setDropOffDate] = useState(new Date());
+    const [locations, setLocations] = useState([]);
+    const [error, setError] = useState(null);
 
-    const generateTimeOptions = () => {
-        const options = [];
-        for (let hour = 0; hour < 24; hour++) {
-            for (let minute of [0, 30]) {
-                const hourFormatted = hour.toString().padStart(2, "0");
-                const minuteFormatted = minute.toString().padStart(2, "0");
-                options.push(
-                    <option key={`${hourFormatted}:${minuteFormatted}`} value={`${hourFormatted}:${minuteFormatted}`}>
-                        {hourFormatted}:{minuteFormatted}
-                    </option>
-                );
+    const [searchTerm, setSearchTerm] = useState("");
+    const [dropOffSearchTerm, setDropOffSearchTerm] = useState("");
+    const [filteredLocations, setFilteredLocations] = useState([]);
+    const [filteredDropOffLocations, setFilteredDropOffLocations] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [showDropOffDropdown, setShowDropOffDropdown] = useState(false);
+
+    const [isSameLocation, setIsSameLocation] = useState(true);
+
+    useEffect(() => {
+        const fetchLocations = async () => {
+            try {
+                const response = await axios.get("http://localhost:5000/api/locations");
+                setLocations(response.data.stations || []);
+            } catch (err) {
+                setError(err.response?.data?.message || "An error occurred");
             }
+        };
+
+        fetchLocations();
+    }, []);
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+
+        if (value.length >= 3 && Array.isArray(locations)) {
+            const searchValue = value.toLowerCase();
+            const matchedLocations = locations.filter((loc) =>
+                (loc.address && loc.address.toLowerCase().includes(searchValue)) ||
+                (loc.city && loc.city.toLowerCase().includes(searchValue)) ||
+                (loc.country && loc.country.toLowerCase().includes(searchValue))
+            );
+
+            setFilteredLocations(matchedLocations);
+            setShowDropdown(matchedLocations.length > 0);
+        } else {
+            setFilteredLocations([]);
+            setShowDropdown(false);
         }
-        return options;
+    };
+
+    const handleDropOffSearchChange = (e) => {
+        const value = e.target.value;
+        setDropOffSearchTerm(value);
+
+        if (value.length >= 3 && Array.isArray(locations)) {
+            const searchValue = value.toLowerCase();
+            const matchedLocations = locations.filter((loc) =>
+                (loc.address && loc.address.toLowerCase().includes(searchValue)) ||
+                (loc.city && loc.city.toLowerCase().includes(searchValue)) ||
+                (loc.country && loc.country.toLowerCase().includes(searchValue))
+            );
+
+            setFilteredDropOffLocations(matchedLocations);
+            setShowDropOffDropdown(matchedLocations.length > 0);
+        } else {
+            setFilteredDropOffLocations([]);
+            setShowDropOffDropdown(false);
+        }
+    };
+
+    const handleSelectLocation = (loc) => {
+        setSearchTerm(`${loc.address} ${loc.city} ${loc.country}`);
+        if (isSameLocation) {
+            setDropOffSearchTerm(`${loc.address} ${loc.city} ${loc.country}`);
+        }
+        setShowDropdown(false);
+    };
+
+    const handleSelectDropOffLocation = (loc) => {
+        setDropOffSearchTerm(`${loc.address} ${loc.city} ${loc.country}`);
+        setShowDropOffDropdown(false);
+    };
+
+    const handleCheckboxChange = () => {
+        setIsSameLocation(!isSameLocation);
+        if (!isSameLocation) {
+            setDropOffSearchTerm(searchTerm); // Sync the drop-off location with pick-up when checked
+        }
     };
 
     return (
@@ -40,46 +110,114 @@ export function Home() {
                             >
                                 Your journey starts with us.
                             </Typography>
-                            <div className="flex flex-wrap gap-4 items-center">
-                                <Input
-                                    variant="outlined"
-                                    size="lg"
-                                    label="Pick-up Location"
-                                    className="border-white text-white"
-                                />
+                            <div className="relative p-6 rounded-lg bg-black/50 backdrop-blur-sm text-white">
+                                <div className="flex flex-col gap-4">
+                                    {/* First Row: Pick-up and Drop-off Locations */}
+                                    <div className="flex flex-row gap-4 items-center">
+                                        <div className="w-full max-w-sm relative">
+                                            <Input
+                                                variant="outlined"
+                                                size="lg"
+                                                label="Pick-up Location"
+                                                className="border-white text-white"
+                                                value={searchTerm}
+                                                onChange={handleSearchChange}
+                                            />
+                                            {showDropdown && (
+                                                <ul className="absolute z-50 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
+                                                    {filteredLocations.map((loc, idx) => (
+                                                        <li
+                                                            key={idx}
+                                                            className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-black"
+                                                            onClick={() => handleSelectLocation(loc)}
+                                                        >
+                                                            {loc.address}, {loc.city}, {loc.country}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
 
-                                {/* Pick-up Date and Time */}
-                                <div className="flex flex-row items-center gap-2">
-                                    <DatePicker
-                                        selected={pickUpDate}
-                                        onChange={(date) => setPickUpDate(date)}
-                                        dateFormat="yyyy-MM-dd"
-                                        className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    />
-                                    <select
-                                        defaultValue="11:00"
-                                        className="px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    >
-                                        {generateTimeOptions()}
-                                    </select>
-                                </div>
+                                        {!isSameLocation && (
+                                            <div className="w-full max-w-sm relative">
+                                                <Input
+                                                    variant="outlined"
+                                                    size="lg"
+                                                    label="Drop-off Location"
+                                                    className="border-white text-white"
+                                                    value={dropOffSearchTerm}
+                                                    onChange={handleDropOffSearchChange}
+                                                />
+                                                {showDropOffDropdown && (
+                                                    <ul className="absolute z-50 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
+                                                        {filteredDropOffLocations.map((loc, idx) => (
+                                                            <li
+                                                                key={idx}
+                                                                className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-black"
+                                                                onClick={() => handleSelectDropOffLocation(loc)}
+                                                            >
+                                                                {loc.address}, {loc.city}, {loc.country}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
 
-                                {/* Drop-off Date and Time */}
-                                <div className="flex flex-row items-center gap-2">
-                                    <DatePicker
-                                        selected={dropOffDate}
-                                        onChange={(date) => setDropOffDate(date)}
-                                        dateFormat="yyyy-MM-dd"
-                                        className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    />
-                                    <select
-                                        defaultValue="11:00"
-                                        className="px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    >
-                                        {generateTimeOptions()}
-                                    </select>
+                                    {/* Second Row: Date Pickers and Time Dropdowns */}
+                                    <div className="flex flex-row gap-4 items-center">
+                                        {/* Pick-up Date and Time */}
+                                        <div className="flex flex-col gap-2">
+                                            <DatePicker
+                                                selected={pickUpDate}
+                                                onChange={(date) => setPickUpDate(date)}
+                                                showTimeSelect
+                                                timeFormat="HH:mm"
+                                                timeIntervals={15}
+                                                dateFormat="yyyy-MM-dd HH:mm"
+                                                className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+
+                                        {/* Drop-off Date and Time */}
+                                        <div className="flex flex-col gap-2">
+                                            <DatePicker
+                                                selected={dropOffDate}
+                                                onChange={(date) => setDropOffDate(date)}
+                                                showTimeSelect
+                                                timeFormat="HH:mm"
+                                                timeIntervals={15}
+                                                dateFormat="yyyy-MM-dd HH:mm"
+                                                className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+                                    </div>
+
+
+                                    {/* Third Row: Checkbox */}
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex items-center gap-2">
+                                            <Checkbox
+                                                type="checkbox"
+                                                id="same-location"
+                                                checked={isSameLocation}
+                                                onChange={handleCheckboxChange}
+                                                className="w-5 h-5"
+                                                label="Same Drop-off Location"
+                                            />
+                                            <Checkbox
+                                                type="checkbox"
+                                                id="driver-age"
+                                                className="w-5 h-5"
+                                                label="Driver age between 26-75"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
