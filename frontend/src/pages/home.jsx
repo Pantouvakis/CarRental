@@ -102,7 +102,8 @@ export function Home() {
                 <div className="absolute top-0 h-full w-full bg-black/60 bg-cover bg-center" />
                 <div className="max-w-8xl container relative mx-auto">
                     <div className="flex flex-wrap items-center">
-                        <div className="ml-auto mr-auto w-full px-4 text-center lg:w-8/12">
+
+                        <div className="ml-auto mr-auto w-full px-4 text-center lg:w-11/12">
                             <Typography
                                 variant="h1"
                                 color="white"
@@ -110,26 +111,58 @@ export function Home() {
                             >
                                 Your journey starts with us.
                             </Typography>
-                            <div className="relative p-6 rounded-lg bg-black/50 backdrop-blur-sm text-white">
-                                <div className="flex flex-col gap-4">
-                                    {/* First Row: Pick-up and Drop-off Locations */}
-                                    <div className="flex flex-row gap-4 items-center">
+
+
+
+                            {/* Transparent box */}
+                            <div className="flex flex-col gap-4 relative p-6 rounded-lg bg-black/50 backdrop-blur-sm text-white">
+
+
+
+                                <div className="flex flex-wrap lg:flex-nowrap gap-4 items-center">
+                                    {/* Pick-up Location */}
+                                    <div className="w-full max-w-sm relative">
+                                        <Input
+                                            variant="outlined"
+                                            size="lg"
+                                            label="Pick-up Location"
+                                            className="border-white text-white"
+                                            value={searchTerm}
+                                            onChange={handleSearchChange}
+                                        />
+                                        {showDropdown && (
+                                            <ul className="absolute z-50 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
+                                                {filteredLocations.map((loc, idx) => (
+                                                    <li
+                                                        key={idx}
+                                                        className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-black"
+                                                        onClick={() => handleSelectLocation(loc)}
+                                                    >
+                                                        {loc.address}, {loc.city}, {loc.country}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+
+                                    {/* Drop-off Location */}
+                                    {!isSameLocation && (
                                         <div className="w-full max-w-sm relative">
                                             <Input
                                                 variant="outlined"
                                                 size="lg"
-                                                label="Pick-up Location"
+                                                label="Drop-off Location"
                                                 className="border-white text-white"
-                                                value={searchTerm}
-                                                onChange={handleSearchChange}
+                                                value={dropOffSearchTerm}
+                                                onChange={handleDropOffSearchChange}
                                             />
-                                            {showDropdown && (
+                                            {showDropOffDropdown && (
                                                 <ul className="absolute z-50 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
-                                                    {filteredLocations.map((loc, idx) => (
+                                                    {filteredDropOffLocations.map((loc, idx) => (
                                                         <li
                                                             key={idx}
                                                             className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-black"
-                                                            onClick={() => handleSelectLocation(loc)}
+                                                            onClick={() => handleSelectDropOffLocation(loc)}
                                                         >
                                                             {loc.address}, {loc.city}, {loc.country}
                                                         </li>
@@ -137,62 +170,39 @@ export function Home() {
                                                 </ul>
                                             )}
                                         </div>
+                                    )}
 
-                                        {!isSameLocation && (
-                                            <div className="w-full max-w-sm relative">
-                                                <Input
-                                                    variant="outlined"
-                                                    size="lg"
-                                                    label="Drop-off Location"
-                                                    className="border-white text-white"
-                                                    value={dropOffSearchTerm}
-                                                    onChange={handleDropOffSearchChange}
-                                                />
-                                                {showDropOffDropdown && (
-                                                    <ul className="absolute z-50 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
-                                                        {filteredDropOffLocations.map((loc, idx) => (
-                                                            <li
-                                                                key={idx}
-                                                                className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-black"
-                                                                onClick={() => handleSelectDropOffLocation(loc)}
-                                                            >
-                                                                {loc.address}, {loc.city}, {loc.country}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                )}
-                                            </div>
-                                        )}
+                                    {/* Pick-up Date and Time */}
+                                    <div className="flex flex-col gap-2">
+                                        <DatePicker
+                                            label="Pick-up Date Time"
+                                            selected={pickUpDate}
+                                            onChange={(date) => setPickUpDate(date)}
+                                            showTimeSelect
+                                            timeFormat="HH:mm"
+                                            timeIntervals={15}
+                                            dateFormat="yyyy-MM-dd HH:mm"
+                                            className="w-full px-3 py-2 text-white bg-transparent border border-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                                            placeholderText="Select Pick-up Date & Time"
+                                        />
                                     </div>
 
-                                    {/* Second Row: Date Pickers and Time Dropdowns */}
-                                    <div className="flex flex-row gap-4 items-center">
-                                        {/* Pick-up Date and Time */}
-                                        <div className="flex flex-col gap-2">
-                                            <DatePicker
-                                                selected={pickUpDate}
-                                                onChange={(date) => setPickUpDate(date)}
-                                                showTimeSelect
-                                                timeFormat="HH:mm"
-                                                timeIntervals={15}
-                                                dateFormat="yyyy-MM-dd HH:mm"
-                                                className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            />
-                                        </div>
-
-                                        {/* Drop-off Date and Time */}
-                                        <div className="flex flex-col gap-2">
-                                            <DatePicker
-                                                selected={dropOffDate}
-                                                onChange={(date) => setDropOffDate(date)}
-                                                showTimeSelect
-                                                timeFormat="HH:mm"
-                                                timeIntervals={15}
-                                                dateFormat="yyyy-MM-dd HH:mm"
-                                                className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            />
-                                        </div>
+                                    {/* Drop-off Date and Time */}
+                                    <div className="flex flex-col gap-2">
+                                        <DatePicker
+                                            label="Drop-off Date Time"
+                                            selected={dropOffDate}
+                                            onChange={(date) => setDropOffDate(date)}
+                                            showTimeSelect
+                                            timeFormat="HH:mm"
+                                            timeIntervals={15}
+                                            dateFormat="yyyy-MM-dd HH:mm"
+                                            className="w-full px-3 py-2 text-white bg-transparent border border-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                                            placeholderText="Select Drop-off Date & Time"
+                                        />
                                     </div>
+                                </div>
+
 
 
                                     {/* Third Row: Checkbox */}
@@ -215,14 +225,16 @@ export function Home() {
                                         </div>
                                     </div>
                                     <Button
-                                        onClick={() => alert("Searching...")} // Replace this with actual functionality
+                                        onClick={() => alert("Searching...")}
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                                     >
                                         Search
                                     </Button>
 
                                 </div>
-                            </div>
+
+
+
 
 
                         </div>
